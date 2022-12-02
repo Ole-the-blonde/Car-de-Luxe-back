@@ -4,6 +4,7 @@ const protectRoute = require("../middlewares/protectRoute");
 router.get("/", (req, res, next) => {
   res.send("Server is running... 🏃‍♂️");
 });
+router.use("/user", require("./user"));
 
 router.use(require("./cars"));
 
