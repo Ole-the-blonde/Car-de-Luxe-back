@@ -6,12 +6,6 @@ const isAuthenticated = require("../middlewares/jwt.middleware");
 const User = require("../models/User.model");
 const saltRounds = 10;
 
-/**
- *
- * * All the routes are prefixed with `/api/auth`
- *
- */
-
 router.post("/signup", async (req, res, next) => {
   const { name, email, password } = req.body;
   if (email === "" || name === "" || password === "") {
@@ -19,19 +13,6 @@ router.post("/signup", async (req, res, next) => {
       .status(400)
       .json({ message: "I need some informations to work with here!" });
   }
-
-  // ! To use only if you want to enforce strong password (not during dev-time)
-
-  // const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-
-  // if (!regex.test(password)) {
-  // 	return res
-  // 		.status(400)
-  // 		.json({
-  // 			message:
-  // 				"Password needs to have at least 8 chars and must contain at least one number, one lowercase and one uppercase letter.",
-  // 		});
-  // }
 
   try {
     const foundUser = await User.findOne({ email });
@@ -84,16 +65,6 @@ router.post("/signin", async (req, res, next) => {
       const user = foundUser.toObject();
       delete user.password;
 
-      /**
-       * Sign method allow you to create the token.
-       *
-       * ---
-       *
-       * - First argument: user, should be an object. It is our payload !
-       * - Second argument: A-really-long-random-string...
-       * - Third argument: Options...
-       */
-
       const authToken = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, {
         algorithm: "HS256",
         expiresIn: "2d",
@@ -121,10 +92,5 @@ router.get("/me", isAuthenticated, async (req, res, next) => {
   const user = await User.findById(req.payload.id).select("-password");
   res.status(200).json(user);
 });
-
-// router.get("/logout", async (req, res, next) => {
-//   await req.session.destroy();
-//   res.redirect("/");
-// });
 
 module.exports = router;
