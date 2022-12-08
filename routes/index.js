@@ -7,6 +7,7 @@ router.get("/", (req, res, next) => {
 router.use("/user", require("./user"));
 
 router.use(require("./cars"));
+router.use(require("./bookings"));
 
 router.get("/private", protectRoute, (req, res, next) => {
   res.send("Protection passed !");

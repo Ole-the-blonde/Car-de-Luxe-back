@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const app = express();
+const upload = require("./config/cloudinary");
 
 //? Services like render use something called a proxy and you need to add this to your server
 app.set("trust proxy", 1);
@@ -22,6 +23,9 @@ app.use(
 
 app.use("/api", require("./routes/index"));
 app.use("/api/auth", require("./routes/auth"));
+app.post("/upload", upload.single("myFile"), (req, res) => {
+  res.json(req.file);
+});
 
 require("./error-handling/index")(app);
 

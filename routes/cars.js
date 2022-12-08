@@ -4,6 +4,7 @@ const Car = require("../models/Car.model");
 const isAuthenticated = require("../middlewares/jwt.middleware");
 const User = require("../models/User.model");
 const isAdmin = require("./../middlewares/isAdmin");
+const Booking = require("../models/Booking");
 
 router.get("/cars", async (req, res) => {
   try {
@@ -44,11 +45,14 @@ router.delete("/cars/:id", isAuthenticated, isAdmin, async (req, res, next) => {
     next(error);
   }
 });
-router.get("/rentcar", (req, res, next) => {
+
+router.post("/cars/:id/reserve", isAuthenticated, async (req, res, next) => {
   try {
-    res.render("rentcar", {
-      title: "Rent you car",
+    const booking = await Booking.create({
+      user: req.payload.id,
+      car: req.params.id,
     });
+    res.status(200).json(booking);
   } catch (error) {
     next(error);
   }
@@ -56,11 +60,11 @@ router.get("/rentcar", (req, res, next) => {
 
 router.post("/rentcar", isAuthenticated, async (req, res, next) => {
   const foundUser = await User.findById(req.payload.id); // code to find the Usser that is logged in
-
+  console.log("the req.body", req.body);
   const {
     brand,
     make,
-    /* image, */
+    image,
     transmission,
     maxSpeed,
     power,
@@ -73,7 +77,7 @@ router.post("/rentcar", isAuthenticated, async (req, res, next) => {
     const newCar = await Car.create({
       brand,
       make,
-      image: "hello",
+      image,
       transmission,
       maxSpeed,
       power,
