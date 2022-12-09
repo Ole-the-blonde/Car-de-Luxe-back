@@ -5,7 +5,7 @@ const isAdmin = async (req, res, next) => {
   if (user.isAdmin) {
     next();
   } else {
-    res.status(401).json({ message: "You are not an admin" });
+    res.status(403).json({ message: "You are not an admin" });
   }
 };
 

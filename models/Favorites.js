@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const favoriteschema = new Schema(
+const favoriteSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -16,4 +16,4 @@ const favoriteschema = new Schema(
   }
 );
 
-module.exports = model("booking", favoriteschema);
+module.exports = model("Booking", favoriteSchema);

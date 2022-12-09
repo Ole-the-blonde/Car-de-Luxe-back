@@ -24,7 +24,7 @@ router.get("/cars/:id", async (req, res) => {
   }
 });
 
-router.patch("/cars/:id", isAuthenticated, async (req, res, next) => {
+router.patch("/cars/:id", isAuthenticated, isAdmin, async (req, res, next) => {
   const data = { ...req.body };
   try {
     const updatedCar = await Car.findByIdAndUpdate(req.params.id, data, {
@@ -47,17 +47,24 @@ router.delete("/cars/:id", isAuthenticated, isAdmin, async (req, res, next) => {
 
 router.post("/cars/:id/reserve", isAuthenticated, async (req, res, next) => {
   try {
-    const Favorites = await Favorite.create({
-      user: req.payload.id,
-      car: req.params.id,
-    });
+    const Favorites = await Favorite.findOneAndUpdate(
+      {
+        user: req.payload.id,
+        car: req.params.id,
+      },
+      {
+        user: req.payload.id,
+        car: req.params.id,
+      },
+      { upsert: true }
+    );
     res.status(200).json(Favorites);
   } catch (error) {
     next(error);
   }
 });
 
-router.post("/rentcar", isAuthenticated, async (req, res, next) => {
+router.post("/addcar", isAuthenticated, isAdmin, async (req, res, next) => {
   const foundUser = await User.findById(req.payload.id); // code to find the User that is logged in
 
   const {
