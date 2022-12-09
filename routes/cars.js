@@ -1,10 +1,9 @@
 const router = require("express").Router();
-const protectRoute = require("../middlewares/protectRoute");
 const Car = require("../models/Car.model");
 const isAuthenticated = require("../middlewares/jwt.middleware");
 const User = require("../models/User.model");
 const isAdmin = require("./../middlewares/isAdmin");
-const Booking = require("../models/Booking");
+const Favorite = require("../models/Favorites");
 
 router.get("/cars", async (req, res) => {
   try {
@@ -48,19 +47,19 @@ router.delete("/cars/:id", isAuthenticated, isAdmin, async (req, res, next) => {
 
 router.post("/cars/:id/reserve", isAuthenticated, async (req, res, next) => {
   try {
-    const booking = await Booking.create({
+    const Favorites = await Favorite.create({
       user: req.payload.id,
       car: req.params.id,
     });
-    res.status(200).json(booking);
+    res.status(200).json(Favorites);
   } catch (error) {
     next(error);
   }
 });
 
 router.post("/rentcar", isAuthenticated, async (req, res, next) => {
-  const foundUser = await User.findById(req.payload.id); // code to find the Usser that is logged in
-  console.log("the req.body", req.body);
+  const foundUser = await User.findById(req.payload.id); // code to find the User that is logged in
+
   const {
     brand,
     make,

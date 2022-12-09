@@ -1,19 +1,19 @@
-const Booking = require("../models/Booking");
+const Booking = require("../models/Favorites");
 const isAuthenticated = require("../middlewares/jwt.middleware");
 const router = require("express").Router();
 
-router.get("/bookings", isAuthenticated, async (req, res, next) => {
+router.get("/favorites", isAuthenticated, async (req, res, next) => {
   try {
-    const bookings = await Booking.find({ user: req.payload.id }).populate(
+    const favorites = await Booking.find({ user: req.payload.id }).populate(
       "car"
     );
-    res.json(bookings);
+    res.json(favorites);
   } catch (error) {
     next(error);
   }
 });
 
-router.delete("/bookings/:id", isAuthenticated, async (req, res, next) => {
+router.delete("/favorites/:id", isAuthenticated, async (req, res, next) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
     res.sendStatus(204);

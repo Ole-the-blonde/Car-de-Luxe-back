@@ -16,7 +16,7 @@ const carSchema = new mongoose.Schema(
     power: { type: String, required: true },
     price: { type: Number, required: true },
     deposit: { type: Number },
-    /* countInStock: { type: Number, required: true }, */
+    countInStock: { type: Number, required: true },
 
     description: { type: String },
   },
